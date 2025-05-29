@@ -86,7 +86,10 @@ for d in ${TRACKED_DIRS[*]}; do
 	cd "$d" &> "$out" || continue
 
 	shopt -s nullglob # prevents literal globs in case there are no matches
-	for i in *.AppImage *.appimage; do
+	for i in *; do
+		if [ "$(mimetype --output-format %m "$i")" != "application/vnd.appimage" ]; then
+			continue
+		fi
 		echo -e "\e[34m# Checking updates for $i\e[0m"
 		"$aiu_exec" -j "$i" &> "$out"
 		updatable="$?"
